@@ -1,0 +1,36 @@
+name: Sandbox Manager - source tests
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  node-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test dependency-free core
+        run: npm test
+      - name: Syntax verify
+        run: |
+          node --check src/state.mjs
+          node --check lib/index.js
+          node --check web/app.js
+          node --check scripts/serve.mjs
+      - name: Build DSH compatibility tool (not installable APK)
+        run: python3 scripts/build_plugin.py
+      - name: Check package archive entries
+        run: python3 -c "import zipfile; z=zipfile.ZipFile('dist/sandbox-manager-tool.zip'); assert set(z.namelist()) == {'package.json','lib/index.js'}"
+      - name: Upload read-only tool ZIP (optional)
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: tra-sandbox-manager-tool
+          path: dist/sandbox-manager-tool.zip
+          retention-days: 7
