@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>Tra — Sandbox Manager</title>
+  <link rel="stylesheet" href="/web/styles.css">
+  <script type="module" src="/web/app.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="mark" aria-hidden="true">◈</div><div><strong>TRA</strong><small>Sandbox Manager</small></div></div>
+    <div class="nav-label">管理中心</div>
+    <div class="nav-item current"><span aria-hidden="true">▦</span> 环境总览</div>
+    <div class="nav-item"><span aria-hidden="true">◇</span> 权限策略</div>
+    <div class="nav-item"><span aria-hidden="true">◷</span> 配置快照</div>
+    <div class="side-bottom"><span class="status-dot"></span> 本地配置演示 · v0.1.0</div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div class="breadcrumb">工作台 <span>/</span> 沙箱管理器</div><div class="top-right"><span class="status-dot"></span> LOCAL ONLY <span class="chip">Prototype</span></div></header>
+    <div class="content">
+      <section class="hero">
+        <div class="eyebrow">DSH EXTENSION · CONFIGURATION WORKSPACE</div>
+        <h1>你的环境，<span>由你掌控。</span></h1>
+        <p>管理隔离环境的配置、权限申请偏好与快照。真正的 Android 隔离尚未接入，所有操作均为本地配置管理。</p>
+        <div class="warning"><strong>重要边界</strong><span>原生隔离：未连接 · 权限强制执行：未连接 · 快照：仅配置元数据 · 实际授权数：0</span></div>
+      </section>
+      <section class="metrics" aria-label="配置统计">
+        <article class="metric"><div>环境配置</div><strong id="profile-count">0</strong><small>本地创建</small></article>
+        <article class="metric"><div>配置快照</div><strong id="snapshot-count">0</strong><small>不包含真实文件</small></article>
+        <article class="metric"><div>待申请权限</div><strong id="request-count">0</strong><small>仅记录申请意向</small></article>
+        <article class="metric"><div>真实授权</div><strong>0</strong><small>原生宿主尚未连接</small></article>
+      </section>
+      <section class="workspace">
+        <div class="panel">
+          <div class="panel-heading"><div><div class="eyebrow">PROFILES</div><h2>环境配置</h2></div><span class="subtle" id="limit-label">最多 12 个</span></div>
+          <form id="create-form" class="create-form">
+            <label class="sr-only" for="new-name">环境名称</label>
+            <input id="new-name" maxlength="48" required placeholder="例如：工作浏览器">
+            <label class="sr-only" for="new-mode">类型</label>
+            <select id="new-mode"><option value="browser">浏览器</option><option value="node">Node</option><option value="mixed">组合配置</option></select>
+            <button type="submit" class="primary">＋ 创建</button>
+          </form>
+          <div id="profiles" class="profile-list" aria-live="polite"></div>
+        </div>
+        <div class="panel detail-panel">
+          <div class="panel-heading"><div><div class="eyebrow">DETAILS</div><h2 id="detail-title">环境详情</h2></div><span class="chip">配置态</span></div>
+          <div id="details" aria-live="polite"><p class="empty">创建或选择一个环境，管理其权限申请偏好和配置快照。</p></div>
+        </div>
+      </section>
+      <section class="panel utility-panel">
+        <div><div class="eyebrow">BACKUP & RECOVERY</div><h2>本地配置备份</h2><p>导出和导入 JSON 配置。不会导出密码、Cookie、应用数据或真实沙箱文件。</p></div>
+        <div class="utility-actions"><button id="export-btn" type="button">↓ 导出 JSON</button><label class="upload-button" for="import-file">↑ 导入 JSON</label><input id="import-file" type="file" accept=".json,application/json" class="sr-only"></div>
+      </section>
+      <div id="message" role="status" aria-live="polite"></div>
+      <footer>TRA SANDBOX MANAGER · Open-source prototype · NOT AN ANDROID VM · NO NATIVE PRIVILEGES</footer>
+    </div>
+  </main>
+</div>
+</body>
+</html>

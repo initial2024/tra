@@ -1,0 +1,14 @@
+{
+  "name": "@initial2024/dsh-sandbox-manager",
+  "version": "0.1.0",
+  "description": "Fail-closed metadata-only sandbox manager and DSH tool compatibility probe",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "serve": "node scripts/serve.mjs",
+    "package:dsh": "python3 scripts/build_plugin.py"
+  },
+  "license": "MIT"
+}
