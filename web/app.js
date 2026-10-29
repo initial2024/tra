@@ -1,7 +1,7 @@
 import {
   CAPABILITIES, emptyState, validateState, transition,
   importedMetadata, exportedMetadata
-} from "/src/state.mjs";
+} from "../src/state.mjs";
 
 const STORE = "tra.sandbox-manager.config.v1";
 const $ = (id) => document.getElementById(id);
@@ -155,7 +155,7 @@ $("export-btn").addEventListener("click",()=>{
     const url=URL.createObjectURL(new Blob([exportedMetadata(state)],{type:"application/json"}));
     const a=document.createElement("a"); a.href=url; a.download="tra-config-metadata.json";
     document.body.append(a);a.click();a.remove();
-    URL.revokeObjectURL(url);
+    setTimeout(()=>URL.revokeObjectURL(url), 1500);
     message("已导出配置元数据，不包含设备数据或凭据。");
   } catch(e) {message("导出失败："+e.message,true);}
 });

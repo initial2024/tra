@@ -25,7 +25,9 @@ const server = http.createServer(async(req,res)=>{
     res.writeHead(500); res.end("Local demo unavailable");
   }
 });
-server.listen(4173,"127.0.0.1",()=> {
-  console.log("Tra local-only management preview: http://127.0.0.1:4173");
+const port = process.env.TRA_PORT === undefined ? 4173 : Number(process.env.TRA_PORT);
+if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error("INVALID_PORT");
+server.listen(port,"127.0.0.1",()=> {
+  console.log("Tra local-only management preview: http://127.0.0.1:" + server.address().port);
   console.log("No Android isolation or native DSH bridge is connected.");
 });

@@ -27,3 +27,10 @@ jobs:
         run: python3 scripts/build_plugin.py
       - name: Check package archive entries
         run: python3 -c "import zipfile; z=zipfile.ZipFile('dist/sandbox-manager-tool.zip'); assert set(z.namelist()) == {'package.json','lib/index.js'}"
+      - name: Upload read-only tool ZIP (optional)
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: tra-sandbox-manager-tool
+          path: dist/sandbox-manager-tool.zip
+          retention-days: 7
