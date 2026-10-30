@@ -86,6 +86,17 @@ function renderDetails() {
   }
   root.append(element("p","small-caption",
     "当前仅管理配置。即使标记为启用，也不会启动 Android 沙箱、授予权限或改变系统环境。"));
+  const modeRow = element("div","permission-row");
+  modeRow.append(element("span","", "配置类型"));
+  const modeSelect = element("select");
+  modeSelect.setAttribute("aria-label","配置类型");
+  for(const [value,label] of Object.entries(modes)){
+    const option=element("option","",label);
+    option.value=value;modeSelect.append(option);
+  }
+  modeSelect.value=profile.mode;
+  modeSelect.addEventListener("change",()=>commit({type:"mode",profileId:profile.id,mode:modeSelect.value}));
+  modeRow.append(modeSelect);root.append(modeRow);
   const controls = element("div","detail-controls");
   controls.append(
     button("✎ 重命名",()=>{
@@ -97,6 +108,8 @@ function renderDetails() {
     }),
     button("＋ 配置快照",()=>commit({type:"snapshot",profileId:profile.id},
       "已保存配置快照（不包含文件、Cookie 或运行状态）。")),
+    button("全部拒绝",()=>commit({type:"reset-permissions",profileId:profile.id},
+      "权限申请偏好已全部恢复为拒绝。Android 系统权限未改变。")),
     button("删除配置",()=>{
       if (window.confirm("删除此环境配置和关联快照？该操作不会清除真实设备数据。"))
         commit({type:"delete",profileId:profile.id},"已删除本地环境配置。");
@@ -134,6 +147,10 @@ function renderDetails() {
           "已恢复配置元数据，环境配置已标记停用。");
       }
     }));
+    row.append(button("删除快照",()=>{
+      if(window.confirm("仅删除这条配置快照？"))
+        commit({type:"delete-snapshot",profileId:profile.id,snapshotId:snapshot.id},"已删除配置快照。");
+    },"danger"));
     root.append(row);
   }
 }

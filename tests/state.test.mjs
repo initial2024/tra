@@ -92,3 +92,16 @@ test("capability enum is fixed and complete", () => {
   assert.equal(CAPABILITIES.length,9);
   assert.ok(CAPABILITIES.includes("diagnostic-upload"));
 });
+
+test("reset permissions and delete a config-only snapshot safely",()=>{
+  let s=created();
+  s=transition(s,{type:"permission",profileId:id1,capability:"shell",value:"ask"},opt(id2));
+  s=transition(s,{type:"reset-permissions",profileId:id1},opt(id2));
+  assert.equal(s.profiles[0].requested.shell,"deny");
+  s=transition(s,{type:"snapshot",profileId:id1},opt(id2));
+  assert.equal(s.snapshots.length,1);
+  s=transition(s,{type:"delete-snapshot",profileId:id1,snapshotId:id2},opt(id2));
+  assert.equal(s.snapshots.length,0);
+  assert.throws(()=>transition(s,{type:"delete-snapshot",profileId:id1,snapshotId:id2},opt(id2)),/SNAPSHOT_NOT_FOUND/);
+  assert.deepEqual(s.history.slice(-2).map(x=>x.kind),["snapshot","delete-snapshot"]);
+});
