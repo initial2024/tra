@@ -1,6 +1,6 @@
 {
   "name": "@initial2024/dsh-sandbox-manager",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Fail-closed metadata-only sandbox manager and DSH tool compatibility probe",
   "private": true,
   "type": "module",

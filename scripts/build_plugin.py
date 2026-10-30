@@ -10,7 +10,7 @@ DIST.mkdir(exist_ok=True)
 out = DIST / "sandbox-manager-tool.zip"
 metadata = {
     "name": "@initial2024/dsh-sandbox-manager-tool",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Read-only DSH sandbox manager status tool; no native enforcement",
     "type": "module",
     "main": "lib/index.js"

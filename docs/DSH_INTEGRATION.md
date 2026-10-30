@@ -1,6 +1,6 @@
 # DSH Sandbox Manager – host integration gates
 
-**Scope:** Tra v0.1 manages configuration metadata and a read-only AI-facing DSH status tool. No code in this repository can make Android's process isolation, network enforcement, WebView storage isolation, or permission grants effective by itself.
+**Scope:** Tra v0.2 manages configuration metadata and a read-only AI-facing DSH status tool. No code in this repository can make Android's process isolation, network enforcement, WebView storage isolation, or permission grants effective by itself.
 
 ## Current DSH evidence (2026-10-29 baseline)
 - P43 CI has demonstrated an Android isolated Service and Binder inside a test repack of the original DSH APK.
