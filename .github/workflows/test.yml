@@ -25,6 +25,18 @@ jobs:
           node --check scripts/serve.mjs
       - name: Build DSH compatibility tool (not installable APK)
         run: python3 scripts/build_plugin.py
+      - name: Verify direct-install DSH TGZ package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/tra-pack
+          FILE="$(npm pack --pack-destination /tmp/tra-pack --json | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s)[0].filename))")"
+          test "$FILE" = "dsh-sandbox-manager-0.2.1.tgz"
+          tar -tzf "/tmp/tra-pack/$FILE" | sort | tee /tmp/tra-pack.list
+          for item in package/package.json package/index.js package/cordis.patch.yml package/README.md package/LICENSE; do
+            grep -Fxq "$item" /tmp/tra-pack.list
+          done
+          test "$(wc -l < /tmp/tra-pack.list)" -eq 5
       - name: Build mobile offline single-file UI
         run: |
           python3 scripts/build_offline_ui.py

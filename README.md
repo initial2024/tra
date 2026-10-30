@@ -48,3 +48,11 @@ See [DSH integration gates](docs/DSH_INTEGRATION.md) before any integration effo
 CI runs Node tests and checks the package archive structure; a green CI run proves **source behavior**, not Android security. No signing material, device credentials or private APK may be committed to this public repository.
 
 License: [MIT](LICENSE).
+
+## DSH direct-install TGZ
+
+DSH Android should use the public npm-style tarball URL, not Git clone and not an Actions artifact:
+
+    https://raw.githubusercontent.com/initial2024/tra/main/dist/dsh-sandbox-manager-0.2.1.tgz
+
+The URL deliberately ends in .tgz. The package contains package.json, index.js, cordis.patch.yml, README.md and LICENSE. It is still a read-only status plugin; importing it does not create a real Android sandbox.
