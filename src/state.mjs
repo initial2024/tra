@@ -66,7 +66,7 @@ function cleanSnapshot(value) {
 }
 function cleanHistory(value) {
   requireKeys(value, ["kind", "profileId", "when"], "INVALID_HISTORY");
-  const kinds = ["create", "rename", "mode", "enable", "permission", "snapshot", "restore", "delete"];
+  const kinds = ["create", "rename", "mode", "enable", "permission", "reset-permissions", "snapshot", "delete-snapshot", "restore", "delete"];
   if (!kinds.includes(value.kind)) fail("INVALID_HISTORY_KIND");
   return {kind:value.kind, profileId:requireId(value.profileId), when:requireDate(value.when)};
 }
@@ -136,6 +136,14 @@ export function transition(input, command, options = {}) {
       fail("INVALID_PERMISSION");
     }
     profile.requested[command.capability] = command.value;
+  } else if (type === "reset-permissions") {
+    profile.requested = deniedPermissions();
+  } else if (type === "delete-snapshot") {
+    const id = requireId(command.snapshotId);
+    const index = state.snapshots.findIndex((item) =>
+      item.id === id && item.profileId === profile.id);
+    if (index < 0) fail("SNAPSHOT_NOT_FOUND");
+    state.snapshots.splice(index, 1);
   } else if (type === "snapshot") {
     if (state.snapshots.length >= LIMITS.snapshots) fail("SNAPSHOT_LIMIT");
     const id = generatedId(options);
