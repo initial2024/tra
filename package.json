@@ -1,14 +1,26 @@
 {
-  "name": "@initial2024/dsh-sandbox-manager",
-  "version": "0.2.0",
-  "description": "Fail-closed metadata-only sandbox manager and DSH tool compatibility probe",
-  "private": true,
+  "name": "dsh-sandbox-manager",
+  "version": "0.2.1",
+  "description": "Read-only DSH sandbox manager status plugin plus local metadata-only manager.",
   "type": "module",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
   "engines": { "node": ">=20" },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "serve": "node scripts/serve.mjs",
-    "package:dsh": "python3 scripts/build_plugin.py"
+    "package:dsh": "npm pack --pack-destination dist"
   },
-  "license": "MIT"
+  "keywords": ["dsh", "dsh-plugin", "sandbox", "security", "manager"],
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
 }

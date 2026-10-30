@@ -1,0 +1,3 @@
+- insert:
+    - id: sandbox-manager
+      name: dsh-sandbox-manager

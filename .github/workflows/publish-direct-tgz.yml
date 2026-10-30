@@ -1,0 +1,58 @@
+name: Publish DSH direct TGZ
+on:
+  push:
+    branches: [main]
+    paths:
+      - package.json
+      - index.js
+      - cordis.patch.yml
+      - README.md
+      - LICENSE
+      - .github/workflows/publish-direct-tgz.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-direct-tgz:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test package
+        run: npm test
+      - name: Build npm-compatible DSH tarball
+        id: pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist
+          mkdir -p dist
+          FILE="$(npm pack --pack-destination dist --json | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s)[0].filename))")"
+          test "$FILE" = "dsh-sandbox-manager-0.2.1.tgz"
+          sha256sum "dist/$FILE" | tee "dist/$FILE.sha256"
+          tar -tzf "dist/$FILE" | sort | tee /tmp/tar-list.txt
+          grep -Fxq "package/package.json" /tmp/tar-list.txt
+          grep -Fxq "package/index.js" /tmp/tar-list.txt
+          grep -Fxq "package/cordis.patch.yml" /tmp/tar-list.txt
+          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+      - name: Commit public raw TGZ
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE="${{ steps.pack.outputs.file }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f "dist/$FILE" "dist/$FILE.sha256"
+          if git diff --cached --quiet; then
+            echo "TGZ already current"
+            exit 0
+          fi
+          git commit -m "dist: publish $FILE"
+          git push origin HEAD:main
